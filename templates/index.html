@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand"><span class="brand-icon">S</span> StudentHub</div>
+        <span class="topbar-note">Student Management System</span>
+    </header>
+
+    <main class="page">
+        <section class="welcome">
+            <div>
+                <p class="eyebrow">STUDENT ADMINISTRATION</p>
+                <h1>Manage your students</h1>
+                <p class="subtitle">Add, view, update and manage student records in one place.</p>
+            </div>
+            <div class="welcome-mark">✦</div>
+        </section>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section class="panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Add a student</h2>
+                    <p>Enter the student's details below.</p>
+                </div>
+                <span class="step-label">NEW RECORD</span>
+            </div>
+
+            <form action="{{ url_for('add_student') }}" method="POST" class="student-form">
+                <div class="field">
+                    <label for="name">Full name</label>
+                    <input id="name" name="name" type="text" placeholder="e.g. Ravi Kumar" required>
+                </div>
+                <div class="field">
+                    <label for="email">Email address</label>
+                    <input id="email" name="email" type="email" placeholder="ravi@example.com" required>
+                </div>
+                <div class="field">
+                    <label for="course">Course</label>
+                    <input id="course" name="course" type="text" placeholder="e.g. Python Full Stack" required>
+                </div>
+                <div class="field">
+                    <label for="phone">Phone number</label>
+                    <input id="phone" name="phone" type="tel" placeholder="10-digit phone number" required>
+                </div>
+                <button class="button primary submit-button" type="submit">＋ Add student</button>
+            </form>
+        </section>
+
+        <section class="panel records-panel">
+            <div class="section-heading records-heading">
+                <div>
+                    <h2>Student records</h2>
+                    <p>All students currently registered.</p>
+                </div>
+                <span class="count">{{ students|length }} students</span>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>STUDENT</th>
+                            <th>EMAIL</th>
+                            <th>COURSE</th>
+                            <th>PHONE</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <td><strong>{{ student.name }}</strong><small>ID #{{ student.id }}</small></td>
+                            <td>{{ student.email }}</td>
+                            <td><span class="course-pill">{{ student.course }}</span></td>
+                            <td>{{ student.phone }}</td>
+                            <td class="actions">
+                                <a class="button small secondary" href="{{ url_for('edit_student', student_id=student.id) }}">Edit</a>
+                                <form action="{{ url_for('delete_student', student_id=student.id) }}" method="POST" onsubmit="return confirm('Delete this student?');">
+                                    <button class="button small danger" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="5" class="empty">No students yet. Add your first student using the form above.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <footer>Built with Python · Flask · SQLite · HTML · CSS</footer>
+    </main>
+</body>
+</html>

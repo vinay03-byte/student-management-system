@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student | StudentHub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="{{ url_for('index') }}"><span class="brand-icon">S</span> StudentHub</a>
+        <span class="topbar-note">Student Management System</span>
+    </header>
+    <main class="page narrow-page">
+        <section class="panel">
+            <div class="section-heading">
+                <div><p class="eyebrow">UPDATE RECORD</p><h1>Edit student</h1><p class="subtitle">Change the details and save your updates.</p></div>
+            </div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <form method="POST" class="student-form one-column">
+                <div class="field"><label for="name">Full name</label><input id="name" name="name" value="{{ student.name }}" required></div>
+                <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" value="{{ student.email }}" required></div>
+                <div class="field"><label for="course">Course</label><input id="course" name="course" value="{{ student.course }}" required></div>
+                <div class="field"><label for="phone">Phone number</label><input id="phone" name="phone" value="{{ student.phone }}" required></div>
+                <div class="form-actions"><button class="button primary" type="submit">Save changes</button><a class="button secondary" href="{{ url_for('index') }}">Cancel</a></div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
